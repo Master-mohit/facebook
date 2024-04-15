@@ -93,24 +93,24 @@
                 <a href="/menu"><h1><i class="ri-arrow-left-line"></i></h1></a>
                 <h2>Saved</h2>
             </div>
-            
         </div>
-      <% post.forEach(pro=>{ %>
-        <div id="menu-part1">
-            <div id="imagee">
-               <div id="image-part">
-                <img src="/images/uploads/<%=pro.picture%>" alt=""> 
-               </div>
-               <div id="username">
-                <h1><%=pro.caption%></h1>
+    
+      <% user.saved.forEach(savedPost => { %>
+    <div id="menu-part1">   
+        <div id="imagee">
+            <div id="image-part">
+                <img src="/images/uploads/<%= savedPost.picture %>" alt=""> 
             </div>
+            <div id="username">
+                <h1><%= savedPost.caption %></h1>
             </div>
-            <div id="icon">
-                <a href="/unsave/<%=pro._id%>"><h2><i class="ri-close-line"></i></h2></a>
-            </div>
-          
         </div>
-        <% }) %>
+        <div id="icon">
+            <a href="/unsave/<%= savedPost._id %>"><i class="ri-close-line"></i></a>
+        </div>
     </div>
+<% }) %>
+    </div>
+    
 </body>
 </html>

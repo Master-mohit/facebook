@@ -1,47 +1,47 @@
-const mongoose = require("mongoose")
-const plm = require("passport-local-mongoose");
+  const mongoose = require("mongoose")
+  const plm = require("passport-local-mongoose");
 
-mongoose.connect("mongodb://127.0.0.1:27017/facebook");
+  mongoose.connect("mongodb://127.0.0.1:27017/facebook");
 
-const userSchema = mongoose.Schema({
-username: String,
-name: String,
-email: String,
-password: String,
-profileImage: String,
-bio: String,
-posts: [{type: mongoose.Schema.Types.ObjectId, ref: "post" }],
+  const userSchema = mongoose.Schema({
+  username: String,
+  name: String,
+  email: String,
+  password: String,
+  profileImage: String,
+  bio: String,
+  posts: [{type: mongoose.Schema.Types.ObjectId, ref: "post" }],
 
-stories: [
-    {
+  stories: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "story" 
+      }
+    ],
+    notifications: [{
       type: mongoose.Schema.Types.ObjectId,
-      ref: "story" 
-    }
-  ],
-  notifications: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Notification"
-}],
+      ref: "Notification"
+  }],
 
-  saved: [{ type: mongoose.Schema.Types.ObjectId, ref: "post" }],
+    saved: [{ type: mongoose.Schema.Types.ObjectId, ref: "post" }],
 
-  delete: [{ type: mongoose.Schema.Types.ObjectId, ref: "post" }],
+    delete: [{ type: mongoose.Schema.Types.ObjectId, ref: "post" }],
 
 
-  followers: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "user" 
-    } 
-  ],
-  following: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "user" 
-    }
-  ],
-});
+    followers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user" 
+      } 
+    ],
+    following: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user" 
+      }
+    ],
+  });
 
-userSchema.plugin(plm) 
+  userSchema.plugin(plm) 
 
-module.exports = mongoose.model("user", userSchema); 
+  module.exports = mongoose.model("user", userSchema); 

@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const userModel = require("./users");
 const postModel = require("./post");
+const commentModel = require("./comment");  
 const passport = require("passport");
 const localStrategy = require("passport-local");
 const upload = require("./multer");
@@ -15,6 +16,37 @@ router.get('/', function(req, res, next) {
 router.get('/login', function(req, res, next) {
   res.render('login');
 });
+
+
+
+router.get('/comment/:id', isLoggedIn, async function(req, res, next) {
+  try {
+    const user = await userModel.findOne({ username: req.session.passport.user });
+    const post = await postModel.findById(req.params.id).populate("user")
+    res.render('comment', { post });
+    
+    const existingComment = await commentModel.findOne({ user: user._id, post: post._id, text: req.body.text });
+    if (existingComment) {
+      return res.status(400).json({ msg: 'Comment already exists for this post' });
+    }
+
+    const newComment = await commentModel.create({
+      text: req.body.text,
+      user: user._id,
+      post: post._id
+    });
+    post.comments.push(newComment._id);
+    await post.save();
+
+    res.status(200).json({ msg: 'Comment added successfully', comment: newComment });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+
+});
+
+
 
 router.get('/sbox',isLoggedIn, async function(req, res, next) {
   const user = await userModel.findOne({username: req.session.passport.user})
@@ -155,8 +187,6 @@ router.post('/profile', isLoggedIn, upload.single('image'), async function(req, 
     res.status(500).send("Internal Server Error");
   }
 });
-
-
 
 
 router.post('/register', function(req, res, next) {
