@@ -22,6 +22,12 @@ const postSchema = mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "comment", 
         }
+    ],
+    save: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "user",  
+        }
     ]
 });
 

@@ -25,6 +25,9 @@ stories: [
 
   saved: [{ type: mongoose.Schema.Types.ObjectId, ref: "post" }],
 
+  delete: [{ type: mongoose.Schema.Types.ObjectId, ref: "post" }],
+
+
   followers: [
     {
       type: mongoose.Schema.Types.ObjectId,

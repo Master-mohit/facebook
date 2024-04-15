@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<style>
+    *{
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+    html,body{
+        width: 100%;
+        height: 100%;
+    }
+    #mainn{
+        width: 100%;
+        height: 100%;
+         background-color: rgba(203, 200, 200, 0.664);;
+       
+    }
+    #menu{
+        width: 100vw;
+        height: 10vw;
+        background-color: rgba(203, 200, 200, 0.664);
+        padding: 8vw 3vw;
+        display: flex;  
+        align-items: center;
+        justify-content: space-between;
+    }
+    #menu-a{
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    #menu-a h2{
+        font-size: 8vw;
+    }
+    #menu-a i{
+        font-size: 9vw;
+    }
+    #menu-part1{
+        width: 100vw;
+        height: 20vw;
+        background-color: white;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 8vw 3vw;
+    }
+    #imagee{
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: rgba(203, 200, 200, 0.664);
+        overflow: hidden;
+        object-fit: cover;
+    }
+    #imagee img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    #pagee{
+        width: 100vw;
+        height: 30vw;
+        /* background-color: aquamarine; */
+        padding: 8vw 3vw;
+    }
+    #page-1{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        margin-bottom: 5vw;
+       background-color: white;
+        gap: 20px;
+    }
+    a{
+        text-decoration: none;
+        color: #000;
+    }
+   
+</style>
+<body>
+    <div id="mainn">
+        <div id="menu">
+            <div id="menu-a">
+                <a href="/main"><h1><i class="ri-arrow-left-line"></i></h1></a>
+                <h2>Menu</h2>
+            </div>
+            <div id="menu-b">
+                <h1><i class="ri-search-line"></i></h1>
+            </div>
+        </div>
+        <div id="menu-part1">
+            <div id="imagee">
+                <img src="/images/uploads/<%=user.profileImage%>" alt=""> 
+            </div>
+            <div id="username">
+                <h1><%=user.username%></h1>
+                <h2>View your profile</h2>
+            </div>
+        </div>
+        <div id="pagee">
+            <div id="page-1">
+                <h1><i class="ri-chat-3-fill"></i></h1>
+                <h1>Messages</h1>
+            </div>
+            <a href="/sbox"><div id="page-1">
+                <h1><i class="ri-save-2-fill"></i></h1>
+                <h1>Saved</h1>
+            </div></a>
+            <div id="page-1">
+                <h1><i class="ri-feedback-line"></i></h1>
+                <h1>Feeds</h1>
+            </div>
+            <div id="page-1">
+                <h1><i class="ri-settings-2-line"></i></h1>
+                <h1>Settings</h1>
+            </div>
+            <div id="page-1">
+                <h1><i class="ri-login-box-fill"></i></h1>
+                <h1>Log out</h1>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

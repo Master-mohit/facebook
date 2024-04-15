@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    html, body{
+        width: 100%;
+        height: 100%;
+    }
+    #main{
+        width: 50vw;
+        height: 100vh;
+    }
+    #card{
+        padding: 3vw;
+        height: 40vw;
+        width: 100vw;
+        background-color: rgba(235, 247, 255, 0.062);
+         align-items: center;
+        position: absolute;
+        top: 86%;
+        left: 50%;
+        line-height: 2.2;
+        transform: translate(-50%, -50%);
+    }
+    #card1{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        background-color: aliceblue;
+    }
+    i{
+        font-size: 5.3vw;
+    }
+    a{
+        text-decoration: none;
+        color: rgb(30, 30, 30);
+    }
+</style>
+<body>
+    <div id="mainn">
+        <div id="card">
+            <a href="/save/post/<%=post._id%>"><div id="card1">
+                <div id="icon">
+                    <i class="ri-save-2-fill"></i>
+                </div>
+                <div id="name">
+                    <h1>Save post</h1>
+                </div>
+            </div></a>
+            <a href="/delete/post/<%=post._id%>"><div id="card1">
+                <div id="icon">
+                    <i class="ri-delete-bin-7-fill"></i>
+                </div>
+                <div id="name">
+                    <h1>Delete post</h1>
+                </div>
+            </div></a>
+        </div>
+        
+    </div>
+</body>
+</html>

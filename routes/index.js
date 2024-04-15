@@ -16,6 +16,103 @@ router.get('/login', function(req, res, next) {
   res.render('login');
 });
 
+router.get('/sbox',isLoggedIn, async function(req, res, next) {
+  const user = await userModel.findOne({username: req.session.passport.user})
+  const post = await postModel.find();
+  res.render('sbox', {user, post});
+});
+
+
+router.get('/menu',isLoggedIn,async function(req, res, next) {
+  const user = await userModel.findOne({username: req.session.passport.user})
+  res.render('menu', {user});
+});
+
+router.get('/unsave/:id', isLoggedIn, async function(req, res, next) {
+  try {
+    const user = await userModel.findOne({ username: req.session.passport.user });
+    const post = await postModel.findById(req.params.id);
+
+    if (!user || !post) {
+      return res.status(404).send("User or Post not found");
+    }
+    const index = user.saved.indexOf(post._id);
+    if (index !== -1) {
+      user.saved.splice(index, 1);
+      await user.save();
+    }
+    res.redirect("/sbox");
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+router.get('/save/:id', isLoggedIn,async function(req, res, next) {
+  const user = await userModel.findOne({username: req.session.passport.user})
+  const post = await postModel.findById(req.params.id)
+  res.render('save', {user, post});
+});
+
+router.get('/save/post/:id', isLoggedIn, async function(req, res, next) {
+  const user = await userModel.findOne({ username: req.session.passport.user });
+  const post = await postModel.findById(req.params.id);
+  
+  if (!user.saved.includes(post._id)) {
+    user.saved.push(post._id);
+    await user.save();
+    res.redirect("/main")
+  }
+});
+
+router.get('/delete/post/:id', isLoggedIn, async function(req, res, next) {
+  try {
+    const user = await userModel.findOne({ username: req.session.passport.user });
+    const post = await postModel.findById(req.params.id);
+  
+    if (post && (post.user.toString() === user._id.toString())) {
+      await postModel.findByIdAndDelete(req.params.id);
+    }
+    
+    res.redirect('/main');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+router.get('/like/:id', async function(req, res, next) {
+  try {
+    
+    if (!req.session.passport || !req.session.passport.user) {
+      return res.status(401).send("Unauthorized");
+    }
+    const user = await userModel.findOne({ username: req.session.passport.user });
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    const post = await postModel.findById(req.params.id);
+    if (!post) {
+      return res.status(404).send("Post not found");
+    }
+    const likedIndex = post.likes.indexOf(user._id);
+    if (likedIndex === -1) {
+    
+      post.likes.push(user._id);
+    } else {
+      post.likes.splice(likedIndex, 1);
+    }
+    await post.save();
+    res.redirect("/main");
+  } catch (error) {
+   
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
 router.get('/main',isLoggedIn,async function(req, res, next) {
   const user = await userModel.findOne({username: req.session.passport.user})
   const posts = await postModel.find().populate("user");
