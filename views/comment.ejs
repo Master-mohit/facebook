@@ -117,7 +117,7 @@
 <body>
   <div class="container">
     <div class="comment-box">
-      <!-- Existing comments -->
+   
       <div class="comment">
         <div class="profile-pic">
           <img src="/images/uploads/<%=post.user.profileImage%>" alt="Profile Picture">
@@ -130,13 +130,13 @@
           <p><%=post.caption%></p>
         </div>
       </div>
-      <!-- Post section -->
+  
       <div class="post-section">
         <img src="/images/uploads/<%=post.picture%>" alt="Post Image">
       </div>
-      <!-- Add more comments and posts here -->
+     
     </div>
-    <!-- Comment input section -->
+    
     <div class="add-comment">
       <textarea id="commentInput" placeholder="Write a comment..."></textarea>
       <button id="postComment">Post</button>
@@ -147,15 +147,15 @@
     document.getElementById('postComment').addEventListener('click', function() {
       const commentText = document.getElementById('commentInput').value;
       if (commentText.trim() !== '') {
-        // Append the new comment to the comment box
+     
         appendComment(commentText);
-        // Clear the comment input field after posting
+       
         document.getElementById('commentInput').value = '';
       }
     });
 
     function appendComment(commentText) {
-      // Create the comment HTML structure
+     
       const commentHtml = `
         <div class="comment">
           <div class="profile-pic">
@@ -163,14 +163,13 @@
           </div>
           <div class="comment-content">
             <div class="comment-header">
-              <h3>username}</h3>
+              <h3>username</h3>
               <span>Now</span>
             </div>
             <p>${commentText}</p>
           </div>
         </div>
       `;
-      // Append the new comment to the comment box
       const commentBox = document.querySelector('.comment-box');
       commentBox.innerHTML += commentHtml;
     }

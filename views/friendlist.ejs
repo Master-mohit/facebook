@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    html, body{
+        width: 100%;
+        height: 100%;
+    }
+    #cover{
+        width: 100vw;
+        height: 100vh;
+        background-color: #fff;
+    }
+    #uper{
+        padding: 1vw 3vw;
+        width: 100vw;
+        height: 60px;
+        /* background-color: lightpink; */
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    #icon{
+        display: flex;
+        align-items: center;
+        gap: 30px;
+    }
+    #photo{
+        padding: 2vw;
+        width: 100vw;
+        height: 30vh;
+        /* background-color: lightgreen; */
+        overflow: hidden;
+    }
+    img{
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+    #logdin{
+        padding: 4vw;
+    }
+    #logdin h1{
+        font-size: 9vw;
+    }
+    #box{
+        width: 100vw;
+        height: 10vh;
+        /* background-color: lightskyblue; */
+        margin-left: 6vw;
+    }
+    button{
+        gap: 30px;
+        padding: 2vw 6vw;
+        margin-right: 5vw;
+        font-size: 4vw;
+        color: #fff;
+        background-color: rgba(53, 109, 252, 0.873);
+        font-weight: 800;
+        border: none;
+    }
+    button i{
+        font-size: 5vw;
+        padding-right: 1.8vw;
+       
+    }
+    a{
+        text-decoration: none;
+        color: #000;
+    }
+
+</style>
+<body>
+    <div id="cover">
+        <div id="uper">
+            <div id="icon">
+              <a href="/search"><h1><i class="ri-arrow-left-line"></i></h1></a>
+              <h1><%=user.username%></h1>
+            </div>
+            <div id="srchicon">
+                <h1><i class="ri-search-line"></i></h1>
+            </div>
+        </div>
+        <div id="photo">
+            <img src="/images/uploads/<%=user.profileImage%>" alt="">
+        </div>
+        <div id="logdin">
+            <h1><%=user.username%></h1>
+        </div>
+        <div id="box">
+            <% if (loggedInUser && user.friendRequests.includes(loggedInUser._id)) { %>
+                <a href="/cancelFriendRequest/<%= user._id %>"><button><i class="ri-user-unfollow-line"></i>Cancel</button></a>
+            <% } else { %>
+                <a href="/addFriend/<%= user._id %>"><button><i class="ri-user-add-line"></i>Add Friends</button></a>
+            <% } %>
+            <button><i class="ri-chat-3-line"></i>Message</button>
+            
+        </div>
+        
+    </div>
+</body>
+</html>

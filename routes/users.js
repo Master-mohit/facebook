@@ -26,20 +26,11 @@
     saved: [{ type: mongoose.Schema.Types.ObjectId, ref: "post" }],
 
     delete: [{ type: mongoose.Schema.Types.ObjectId, ref: "post" }],
-
-
-    followers: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "user" 
-      } 
-    ],
-    following: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "user" 
-      }
-    ],
+   
+    friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
+    
+    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
+    
   });
 
   userSchema.plugin(plm) 

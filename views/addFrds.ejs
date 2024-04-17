@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friend Requests</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+        #rapper {
+            width: 100vw;
+            height: 100vh;
+            background-color: #fff;
+        }
+        #frd {
+            padding: 4vw 5vw;
+            width: 100vw;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20vw;
+        }
+        #frd i {
+            font-size: 7vw;
+        }
+        #midle {
+            padding: 10vw 2vw;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        #photo {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background-color: rgba(169, 168, 168, 0.833);
+            overflow: hidden;
+        }
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        #username h1 {
+            font-size: 9vw;
+            margin-bottom: 4vw;
+        }
+       
+        button {
+            padding: 2.4vw 4vw;
+            margin-right: 3vw;
+            font-size: 5vw;
+            font-weight: 700;
+            border: none;
+            outline: none;
+            border-radius: 2vw;
+            background-color: #c6bfbfd6;
+        }
+        i {
+            font-size: 5vw;
+            margin-right: 2vw;
+        }
+        #blue {
+            background-color: blue;
+            color: #fff;
+        }
+        a{
+            text-decoration: none;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div id="rapper">
+        <div id="frd">
+            <h1>Friends</h1>
+            <h1><i class="ri-search-line"></i></h1>
+        </div>
+        <% user.friendRequests.forEach(frduser => { %>
+            <a href="/friendlist/<%=frduser._id%>"><div id="midle">
+                <div id="photo">
+                    <img src="/images/uploads/<%= frduser.profileImage %>" alt="">
+                </div>
+                <div id="username">
+                    <h1><%= frduser.username %></h1>
+                    <% if (user.friends.includes(frduser._id)) { %>
+                        <h2>You are now friends</h2>
+                    <% } else { %>
+                        <a href="/finallyFrd/<%= frduser._id %>">
+                            <button id="blue">
+                                <i class="ri-user-follow-fill"></i>Confirm
+                            </button>
+                        </a>
+                        <button>Delete</button>
+                    <% } %>
+                </div>
+            </div></a>
+        <% }) %>
+    </div>
+</body>
+</html>

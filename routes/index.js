@@ -17,6 +17,160 @@ router.get('/login', function(req, res, next) {
   res.render('login');
 });
 
+router.get('/finallyFrd/:id', isLoggedIn, async function(req, res, next) {
+  try {
+    // Find the logged-in user
+    const loggedInUser = await userModel.findOne({ username: req.session.passport.user });
+    if (!loggedInUser) {
+      return res.status(404).send("User not found");
+    }
+
+    // Find the user to add as a friend
+    const friendToAdd = await userModel.findById(req.params.id);
+    if (!friendToAdd) {
+      return res.status(404).send("Friend not found");
+    }
+
+    // Check if they are already friends
+    if (loggedInUser.friends.includes(friendToAdd._id) && friendToAdd.friends.includes(loggedInUser._id)) {
+      return res.status(400).send("Already friends");
+    }
+
+    // Add the friend to the user's friends list
+    loggedInUser.friends.push(friendToAdd._id);
+    await loggedInUser.save();
+
+    // Add the user to the friend's friends list
+    friendToAdd.friends.push(loggedInUser._id);
+    await friendToAdd.save();
+
+    // Redirect to a confirmation page or render a success message
+    res.render('finallyFrd');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
+router.get('/search', function(req, res, next) {
+  res.render('search');
+});
+
+router.get('/addFrds/:id', isLoggedIn, async function(req, res, next) {
+  try {
+    const user = await userModel.findOne({ username: req.session.passport.user }).populate('friendRequests', 'username profileImage');
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    const pro = req.params.id;
+    res.render('addFrds', { user, pro });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.get('/cancelFriendRequest/:id', isLoggedIn, async function(req, res, next) {
+  try {
+    // Fetch the logged-in user's data including friend requests
+    const loggedInUser = await userModel.findOne({ username: req.session.passport.user }).populate('friendRequests');
+
+    // Find the index of the friend request to cancel
+    const indexToRemove = loggedInUser.friendRequests.findIndex(request => request._id.toString() === req.params.id);
+    if (indexToRemove === -1) {
+      return res.status(400).send("Friend request not found");
+    }
+
+    // Remove the friend request from the array
+    loggedInUser.friendRequests.splice(indexToRemove, 1);
+
+    // Save the updated user data
+    await loggedInUser.save();
+
+    // Redirect to the friendlist page
+    res.redirect("/friendlist/" + loggedInUser._id);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
+router.get('/addFriend/:id', isLoggedIn, async function(req, res, next) {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  try {
+    const loggedInUser = await userModel.findOne({ username: req.session.passport.user });
+    if (!loggedInUser) {
+      return res.status(404).send("User not found");
+    }
+
+    const userToAddFriend = await userModel.findById(req.params.id);
+    if (!userToAddFriend) {
+      return res.status(404).send("User to add friend not found");
+    }
+    if (loggedInUser._id.toString() === req.params.id) {
+      return res.status(400).send("You cannot send a friend request to yourself");
+    }
+    const isFriendRequestSent = loggedInUser.friendRequests.includes(userToAddFriend._id.toString());
+    if (isFriendRequestSent) {
+      // If request already sent, remove it and save changes
+      const indexToRemove = loggedInUser.friendRequests.indexOf(userToAddFriend._id.toString());
+      loggedInUser.friendRequests.splice(indexToRemove, 1);
+      await loggedInUser.save();
+      console.log("Friend request cancelled");
+    } else {
+      // If request not sent, push it and save changes
+      userToAddFriend.friendRequests.push(loggedInUser._id);
+      await userToAddFriend.save();
+      console.log("Friend request sent successfully");
+    }
+
+    res.redirect("/friendlist/" + loggedInUser._id);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
+router.get('/friendlist/:id', isLoggedIn, async function(req, res, next) {
+  try {
+      const userId = req.params.id;
+      const user = await userModel.findById(userId);
+      if (!user) {
+          return res.status(404).send("User not found");
+      }
+      const loggedInUser = req.user;
+      res.render('friendlist', { user, loggedInUser }); 
+  } catch (error) {
+      console.error('Error retrieving user details:', error);
+      res.status(500).send('Internal Server Error');
+  }
+});
+
+
+router.post('/searchUser', isLoggedIn, async (req, res, next) => {
+  try {
+      const data = req.body.data;
+
+      const allUsers = await userModel.find({
+          username: {
+              $regex: data,
+              $options: 'i'
+          }
+      });
+
+      console.log(allUsers);
+
+      res.status(200).json(allUsers);
+  } catch (error) {
+      console.error('Error searching users:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 
 router.get('/comment/:id', isLoggedIn, async function(req, res, next) {
