@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<style>
+    *{
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+    html,body{
+        width: 100%;
+        height: 100%;
+    }
+    #coverr{
+        width: 100vw;
+        height: 100vh;
+        background-color: #fff;
+    }
+    #top{
+        width: 100vw;
+        height: 8vh;
+        /* background-color: lightcoral; */
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 2vw 3vw ;
+        margin-bottom: 3vw;
+    }
+    #mess{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+    }
+    #mess h1{
+        font-weight: 900;
+    }
+    #midle{
+        width: 100vw;
+        height: 11vh;
+        /* background-color: lightsalmon; */
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        padding: 1vw 3vw;
+    }
+    #midle1{
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: red;
+        overflow: hidden;
+    }
+    #midle1 img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    #midle2{
+        color: #000;
+    }
+    a{
+        text-decoration: none;
+        
+    }
+     i{
+        color: #000;
+    }
+</style>
+<body>
+    <div id="coverr">
+        <div id="top">
+            <div id="mess">
+                <a href="/main"><h1><i class="ri-arrow-left-line"></i></h1></a>
+                <h1>Messages</h1>
+            </div>
+            <div id="iconn">
+                <a href=""><h1><i class="ri-search-line"></i></h1></a>
+            </div>
+        </div>
+        <% user.friends.reverse().forEach(frd=>{ %>
+        <a href="/mess/<%=frd._id%>"><div id="midle">
+            <div id="midle1">
+                <img src="/images/uploads/<%=frd.profileImage%>" alt="">
+            </div>
+            <div id="midle2">
+                <h1><%=frd.username%></h1>
+            </div>
+        </div></a>
+    <% }) %>
+    </div>
+</body>
+</html>

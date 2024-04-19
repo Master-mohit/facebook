@@ -27,13 +27,20 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20vw;
+            gap: 25px;
+            
         }
+        #topp{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+       
         #frd i {
             font-size: 7vw;
         }
         #midle {
-            padding: 10vw 2vw;
+            padding: 7vw 2vw;
             width: 100vw;
             display: flex;
             align-items: center;
@@ -84,10 +91,15 @@
 <body>
     <div id="rapper">
         <div id="frd">
+           <div id="topp">
+            <a href="/main"><h1><i class="ri-arrow-left-line"></i></h1></a>
             <h1>Friends</h1>
-            <h1><i class="ri-search-line"></i></h1>
+           </div>
+            <div id="iconn">
+                <h1><i class="ri-search-line"></i></h1>
+            </div>
         </div>
-        <% user.friendRequests.forEach(frduser => { %>
+        <% user.friendRequests.reverse().forEach(frduser => { %>
             <a href="/friendlist/<%=frduser._id%>"><div id="midle">
                 <div id="photo">
                     <img src="/images/uploads/<%= frduser.profileImage %>" alt="">

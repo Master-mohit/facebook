@@ -117,24 +117,26 @@
 <body>
   <div class="container">
     <div class="comment-box">
-   
       <div class="comment">
         <div class="profile-pic">
-          <img src="/images/uploads/<%=post.user.profileImage%>" alt="Profile Picture">
+          <% if (post.user && post.user.profileImage) { %>
+            <img src="/images/uploads/<%=post.user.profileImage%>" alt="Profile Picture">
+          <% } else { %>
+            <div>Profile Picture Not Available</div>
+          <% } %>
         </div>
         <div class="comment-content">
           <div class="comment-header">
-            <h3><%=post.user.username%></h3>
+            <h3><%= post.user ? post.user.username : 'Unknown User' %></h3>
             <span>2h</span>
           </div>
-          <p><%=post.caption%></p>
+          <p><%= post.caption %></p>
         </div>
       </div>
   
       <div class="post-section">
-        <img src="/images/uploads/<%=post.picture%>" alt="Post Image">
+        <img src="/images/uploads/<%= post.picture %>" alt="Post Image">
       </div>
-     
     </div>
     
     <div class="add-comment">
@@ -142,7 +144,6 @@
       <button id="postComment">Post</button>
     </div>
   </div>
-  
   <script>
     document.getElementById('postComment').addEventListener('click', function() {
       const commentText = document.getElementById('commentInput').value;

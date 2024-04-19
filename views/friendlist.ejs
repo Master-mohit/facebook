@@ -100,13 +100,14 @@
         <div id="box">
             <% if (loggedInUser && user.friendRequests.includes(loggedInUser._id)) { %>
                 <a href="/cancelFriendRequest/<%= user._id %>"><button><i class="ri-user-unfollow-line"></i>Cancel</button></a>
+            <% } else if (user.friends.includes(loggedInUser._id) || loggedInUser.friends.includes(user._id)) { %>
+                <button><i class="ri-user-add-line"></i>Friend</button>
             <% } else { %>
                 <a href="/addFriend/<%= user._id %>"><button><i class="ri-user-add-line"></i>Add Friends</button></a>
             <% } %>
-            <button><i class="ri-chat-3-line"></i>Message</button>
-            
+            <a href="/mess/<%=user._id%>"><button><i class="ri-chat-3-line"></i>Message</button></a>
         </div>
-        
+         
     </div>
 </body>
 </html>
