@@ -112,10 +112,18 @@
     .add-comment button:hover {
       background-color: #1658cb;
     }
+    a{
+      text-decoration: none;
+      color: #000;
+    }
+    i{
+       padding-left: 3vw;
+    }
   </style>
 </head>
 <body>
   <div class="container">
+    <a href="/main"><h1><i class="ri-arrow-left-line"></i></h1></a>
     <div class="comment-box">
       <div class="comment">
         <div class="profile-pic">
@@ -148,23 +156,23 @@
     document.getElementById('postComment').addEventListener('click', function() {
       const commentText = document.getElementById('commentInput').value;
       if (commentText.trim() !== '') {
-     
-        appendComment(commentText);
-       
+        // Pass the username and profile image to the appendComment function
+        const username = "<%=user.username%>";
+        const profileImage = "/images/uploads/<%=user.profileImage%>";
+        appendComment(username, commentText, profileImage);
         document.getElementById('commentInput').value = '';
       }
     });
-
-    function appendComment(commentText) {
-     
+  
+    function appendComment(username, commentText, profileImage) {
       const commentHtml = `
         <div class="comment">
           <div class="profile-pic">
-            <img src="profile2.jpg" alt="Profile Picture">
+            <img src="${profileImage}" alt="Profile Picture">
           </div>
           <div class="comment-content">
             <div class="comment-header">
-              <h3>username</h3>
+              <h3>${username}</h3>
               <span>Now</span>
             </div>
             <p>${commentText}</p>
@@ -175,5 +183,7 @@
       commentBox.innerHTML += commentHtml;
     }
   </script>
+  
+  
 </body>
 </html>

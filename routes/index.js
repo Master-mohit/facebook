@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const userModel = require("./users");
 const postModel = require("./post");
+const storyModel = require("./story");
 const commentModel = require("./comment");  
 const passport = require("passport");
 const localStrategy = require("passport-local");
@@ -21,6 +22,68 @@ router.get('/search', function(req, res, next) {
   res.render('search');
 });
 
+router.post('/story', isLoggedIn, upload.single('storyFile'), async function(req, res, next) {
+  try {
+    const user = await userModel.findOne({ username: req.session.passport.user });
+    const story = await storyModel.create({
+      user: user._id,
+      file: req.file.filename, 
+      fileType: req.file.mimetype 
+    });
+
+    user.stories.push(story._id);
+    await user.save();
+
+    res.render('story', { user, file: req.file.filename });
+  
+  } catch (error) {
+    console.error(error);
+   
+  }
+});
+
+
+router.get('/likee/:id', async function(req, res, next) {
+  try {
+    
+    if (!req.session.passport || !req.session.passport.user) {
+      return res.status(401).send("Unauthorized");
+    }
+    const user = await userModel.findOne({ username: req.session.passport.user });
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    const post = await postModel.findById(req.params.id);
+    if (!post) {
+      return res.status(404).send("Post not found");
+    }
+    const likedIndex = post.likes.indexOf(user._id);
+    if (likedIndex === -1) {
+    
+      post.likes.push(user._id);
+    } else {
+      post.likes.splice(likedIndex, 1);
+    }
+    await post.save();
+    res.redirect("back");
+  } catch (error) {
+   
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
+router.get('/openprofile/:id', isLoggedIn, async function(req, res, next) {
+  try {
+    const user = await userModel.findOne({ username: req.session.passport.user });
+    const pro = await postModel.findById(req.params.id).populate("user"); 
+    res.render('openprofile', { user, pro });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('Server Error');
+  }
+});
 
 
 router.get('/mess/:id',isLoggedIn, async function(req, res, next) {
@@ -59,6 +122,15 @@ router.get('/finallyFrd/:id', isLoggedIn, async function(req, res, next) {
     res.render('finallyFrd');
     res.render('subdirectory/finallyFrd');
 
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.get('/finallyFrd/:id', isLoggedIn, async function(req, res, next) {
+  try {
+    res.render('finallyFrd', {});
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
@@ -152,8 +224,6 @@ router.get('/friendlist/:id', isLoggedIn, async function(req, res, next) {
       if (!user) {
           return res.status(404).send("User not found");
       }
-
-      // Find the logged-in user based on session data
       const loggedInUser = await userModel.findOne({ username: req.session.passport.user });
       if (!loggedInUser) {
           return res.status(404).send("Logged-in user not found");
@@ -191,14 +261,20 @@ router.post('/searchUser', isLoggedIn, async (req, res, next) => {
 router.get('/comment/:id', isLoggedIn, async function(req, res, next) {
   try {
     const user = await userModel.findOne({ username: req.session.passport.user });
-    const post = await postModel.findById(req.params.id).populate("user")
-    res.render('comment', { post });
+    const post = await postModel.findById(req.params.id).populate("user");
     
-    const existingComment = await commentModel.findOne({ user: user._id, post: post._id, text: req.body.text });
-    if (existingComment) {
-      return res.status(400).json({ msg: 'Comment already exists for this post' });
-    }
+    res.render('comment', { post, user });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('Server Error');
+  }
+});
 
+router.post('/comment/:id', isLoggedIn, async function(req, res, next) {
+  try {
+    const user = await userModel.findOne({ username: req.session.passport.user });
+    const post = await postModel.findById(req.params.id).populate("user");
+    
     const newComment = await commentModel.create({
       text: req.body.text,
       user: user._id,
@@ -207,17 +283,16 @@ router.get('/comment/:id', isLoggedIn, async function(req, res, next) {
     post.comments.push(newComment._id);
     await post.save();
 
-    res.status(200).json({ msg: 'Comment added successfully', comment: newComment });
+    return res.status(200).json({ msg: 'Comment added successfully', comment: newComment });
   } catch (error) {
     console.error(error);
-    res.status(500).send('Server Error');
+    return res.status(500).send('Server Error');
   }
-
 });
 
 
 router.get('/sbox',isLoggedIn, async function(req, res, next) {
-  const user = await userModel.findOne({username: req.session.passport.user})
+  const user = await userModel.findOne({username: req.session.passport.user}).populate("saved")
   const post = await postModel.find();
   res.render('sbox', {user, post});
 });
@@ -249,13 +324,13 @@ router.get('/unsave/:id', isLoggedIn, async function(req, res, next) {
 
 
 router.get('/save/:id', isLoggedIn,async function(req, res, next) {
-  const user = await userModel.findOne({username: req.session.passport.user})
-  const post = await postModel.findById(req.params.id)
+  const user = await userModel.findOne({username: req.session.passport.user});
+  const post = await postModel.findById(req.params.id).populate("user")
   res.render('save', {user, post});
 });
 
 router.get('/save/post/:id', isLoggedIn, async function(req, res, next) {
-  const user = await userModel.findOne({ username: req.session.passport.user });
+  const user = await userModel.findOne({ username: req.session.passport.user })
   const post = await postModel.findById(req.params.id);
   
   if (!user.saved.includes(post._id)) {
@@ -313,11 +388,25 @@ router.get('/like/:id', async function(req, res, next) {
 });
 
 
-router.get('/main',isLoggedIn,async function(req, res, next) {
-  const user = await userModel.findOne({username: req.session.passport.user})
-  const posts = await postModel.find().populate("user");
-  res.render('main', {user, posts});
+// main route mein findById ka istemal karein
+router.get('/main', isLoggedIn, async function(req, res, next) {
+  try {
+    const user = await userModel.findOne({ username: req.session.passport.user });
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    const stories = await storyModel.find({ user: user._id });
+
+    const posts = await postModel.find().populate("user");
+
+    res.render('main', { user, posts, stories });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('Internal Server Error');
+  }
 });
+
+
 
 
 router.get('/createp',isLoggedIn,async function(req, res, next) {

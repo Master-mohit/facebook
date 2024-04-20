@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    html, body{
+        width: 100%;
+        height: 100%;
+    }
+    #mainn{
+        width: 100vw;
+        height: 100vh;
+        background-color: #000;
+       
+    }
+    #top{
+        width: 100vw;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4vw 3vw;
+    }
+    #imagee{
+        width: 100vw;
+        height: 50vh;
+        background-color: aqua;
+        overflow: hidden;
+       margin-top: 40vw;
+      
+    }
+    img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+     #userr{
+        padding: 4vw 3vw;
+        width: 100vw;
+        height: 30vw;
+        margin-bottom: 10vw;
+        color: #fff;
+     }
+     #userr h1{
+        font-size: 8vw;
+        font-weight: 800;
+        padding-bottom: 3vw;
+     }
+     #userr h2{
+        font-size: 4.5vw;
+        font-weight: 400;
+        padding-bottom: 3vw;
+     }
+    #like-sec {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 16px;
+    }
+    #like-sec i{
+      font-size: 7vw;
+    }
+    a{
+        text-decoration: none;
+        color: #000;
+    }
+    i{
+        color: #fff;
+    }
+</style>
+<body>
+  <div id="mainn">
+    <div id="top">
+        <div id="top-1">
+            <a href="/main"><h1><i class="ri-arrow-left-line"></i></h1></a>
+        </div>
+        <div id="top-2">
+            <h1><i class="ri-more-2-fill"></i></h1>
+        </div>
+    </div>
+    <div id="imagee">
+        <img src="/images/uploads/<%=pro.picture%>" alt="">
+    </div>
+    <div id="userr">
+        <h1><%=pro.user.username%></h1>
+        <h2><%=pro.caption%></h2>
+    </div>
+    <div id="like-sec">
+   <a href="/likee/<%=pro._id%>">
+    <% if (String(pro.likes).includes(String(user._id))) { %>
+        <i class="ri-thumb-up-fill" style="color: blue;"></i>
+    <% } else { %>
+        <i class="ri-thumb-up-line" style="color: #fff;"></i>
+    <% } %>
+</a>
+       <a href="/commentt/<%=pro._id%>"><h2><i class="ri-chat-3-line"></i></h2></a>
+    </div> 
+  </div>
+</body>
+</html>

@@ -87,20 +87,39 @@
     }
 
     #story-div {
+      width: 100vw;
+      height: 20vh;
+      background-color: red;
+      /* overflow-x: auto;
+      white-space:  nowrap;
+      position: relative; */
       padding: 0 16px;
-      background-color: #ffffff;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
+      align-items: center;  
+      gap: 25px;
+      /* justify-content: space-between; */
+       /* flex-wrap: wrap; */
+
+     
     }
 
-    #story {
+    #story1 {
+      overflow-x: auto;
+      white-space:  nowrap;
       width: calc(25% - 24px);
       height: 100px;
       background-color: #ddd;
       margin-bottom: 16px;
       cursor: pointer; 
+      overflow: hidden;
+      display: flex;
+    
+    }
+     img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
     }
 
     #public {
@@ -174,6 +193,15 @@
     .ri-thumb-up-fill[style="color: blue;"] {
       color: blue;
     }
+    .hidden {
+  display: none;
+}
+.story-container{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 
     @media (max-width: 768px) {
       #upper {
@@ -248,32 +276,40 @@
       </div>
     </div>
     
-  
     <div id="story-div">
-      <div id="story"></div>
-      <div id="story"></div>
-      <div id="story"></div>
-      <div id="story"></div>
+      <div id="story1"></div>
+      <% stories.forEach(story => { %>
+      <div id="story1">
+         <img src="/images/uploads/<%= story.file %>" alt="">
+      </div>
+      <% }) %>
     </div>
 
+    
+    <form id="storyForm" action="/story" method="post" enctype="multipart/form-data" class="hidden">
+      <label for="storyFileInput" id="fileInputLabel" class="hidden">Choose File</label>
+      <input type="file" name="storyFile" id="storyFileInput" accept="image/*, video/*" class="hidden">
+      <button type="submit" id="submitStory">Upload Story</button>
+    </form>
+    
    
     <div id="post-sec">
       <% posts.reverse().forEach(post => { %>
         <div id="public">
-          <div id="public-a">
-            <div id="image">
-              <% if (post.user && post.user.profileImage) { %>
-                <img src="/images/uploads/<%=post.user.profileImage%>" alt="">
-              <% } else { %>
-                <img src="/images/uploads/<%=user.profileImage%>" alt="Profile Image">
-              <% } %>
-            </div>
-            <% if (post.user && post.user.username) { %>
-              <h1 style="color: #385898;"><%= post.user.username %></h1>
+        <a href="/friendlist/<%=post.user._id%>"><div id="public-a">
+          <div id="image">
+            <% if (post.user && post.user.profileImage) { %>
+              <img src="/images/uploads/<%=post.user.profileImage%>" alt="">
             <% } else { %>
-              <h1 style="color: #385898;"><%=user.username%></h1>
+              <img src="/images/uploads/<%=user.profileImage%>" alt="Profile Image">
             <% } %>
           </div>
+          <% if (post.user && post.user.username) { %>
+            <h1 style="color: #385898;"><%= post.user.username %></h1>
+          <% } else { %>
+            <h1 style="color: #385898;"><%=user.username%></h1>
+          <% } %>
+        </div></a>
           <div id="icon">
             <a href="/save/<%=post._id%>"><h1><i class="ri-more-2-fill" style="color: #385898;"></i></h1></a>
           </div>
@@ -285,9 +321,9 @@
           </div>
         </div>
         <div id="post">
-          <div id="post-image">
+          <a href="/openprofile/<%=post._id%>"><div id="post-image">
             <img src="/images/uploads/<%= post.picture %>" alt="">
-          </div>
+          </div></a>
           <div id="like-sec">
             <a href="/like/<%= post._id %>" id="likeButton<%= post._id %>">
                 <% if (String(post.likes).includes(String(user._id))) { %>
@@ -308,9 +344,26 @@
 
   <script>
     
-    document.getElementById('story').addEventListener('click', function() {
-      document.getElementById('fileInput').click();
-    });
+    document.addEventListener("DOMContentLoaded", function() {
+  const firstStoryContainer = document.getElementById("story1");
+  const fileInput = document.getElementById("storyFileInput");
+
+ 
+  firstStoryContainer.addEventListener("click", function() {
+    fileInput.click(); // Trigger click event on file input
+  });
+
+  // Listen for changes in the file input
+  fileInput.addEventListener("change", function() {
+    document.getElementById("storyForm").submit(); // Submit the form when a file is selected
+  });
+});
+
+
+
+
+
+
   </script>
 </body>
 </html>
