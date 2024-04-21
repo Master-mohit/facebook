@@ -22,6 +22,35 @@ router.get('/search', function(req, res, next) {
   res.render('search');
 });
 
+router.get('/bio', isLoggedIn, async function(req, res, next) {
+  try {
+    const user = await userModel.findOne({ username: req.session.passport.user });
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+    res.render('bio', { user });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('Internal Server Error');
+  }
+});
+
+
+router.post('/bio', isLoggedIn, async function(req, res, next) {
+  try {
+    const user = await userModel.findOne({ username: req.session.passport.user })
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+    user.bio = req.body.bio;
+    await user.save();
+    res.redirect('/bio');
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('Internal Server Error');
+  }
+});
+
 router.post('/story', isLoggedIn, upload.single('storyFile'), async function(req, res, next) {
   try {
     const user = await userModel.findOne({ username: req.session.passport.user });
@@ -388,7 +417,6 @@ router.get('/like/:id', async function(req, res, next) {
 });
 
 
-// main route mein findById ka istemal karein
 router.get('/main', isLoggedIn, async function(req, res, next) {
   try {
     const user = await userModel.findOne({ username: req.session.passport.user });

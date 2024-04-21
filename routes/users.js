@@ -9,7 +9,7 @@
   email: String,
   password: String,
   profileImage: String,
-  bio: String,
+ bio: String,
   posts: [{type: mongoose.Schema.Types.ObjectId, ref: "post" }],
 
   stories: [

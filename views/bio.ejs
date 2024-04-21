@@ -83,6 +83,25 @@
       font-size: 4vw;
       padding-right: 3vw;
     }
+    #bio{
+        width: 100vw;
+        height: 70vw;
+    }
+    #bio h1{
+        font-size: 7vw;
+    }
+    #bio input{
+     padding: 2vw 7vw;
+     font-size: 5vw;
+     outline: none;
+     border: none;
+     margin-left: 5vw;
+    }
+    #bio #button{
+        margin-top: 4vw;
+        background-color: #3d75f0;
+      color: #fff;
+    }
   </style>
 </head>
 <body>
@@ -95,15 +114,16 @@
     </div>
     <div class="profile-info">
       <h2><%=user.username%></h2>
-
-      <h3><%=user.bio%></h3>
-
       <form id="profileForm" action="/profile" method="post" enctype="multipart/form-data">
         <input type="file" id="profileImageInput" name="image" style="display: none;" onchange="uploadProfile()">
       </form>
-      <a href="/bio"> <button type="submit"><i class="ri-pencil-fill"></i>Edit Profile</button></a> 
-      <div class="menu-icon">
-        <i class="ri-more-2-fill"></i>
+     
+      <div id="bio">
+        <h1>Bio</h1>
+        <form action="/profile" method="post">
+      <input type="text" name="bio" placeholder="Add a short bio to tell people more about yourself">
+      <input id="button" type="submit" value="Save">
+    </form>
       </div>
     </div>
   </div>

@@ -1,5 +1,6 @@
-const mongoose = require("mongoose");
+// story.js
 
+const mongoose = require("mongoose");
 
 const storySchema = mongoose.Schema({
   user: {
@@ -15,12 +16,12 @@ const storySchema = mongoose.Schema({
     type: String, 
     required: true
   },
+  viewers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], 
   createdAt: {
     type: Date,
     default: Date.now
   }
 });
-
 
 const Story = mongoose.model('Story', storySchema);
 

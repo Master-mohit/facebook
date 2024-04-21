@@ -97,7 +97,7 @@
             try {
                 const response = await axios.post('/searchUser', { data });
     
-                document.querySelector('#middle').innerHTML = ""; // Clear previous search results
+                document.querySelector('#middle').innerHTML = ""; 
     
                 response.data.forEach(searchUser => {
                     appendSearchUser(searchUser.profileImage, searchUser.username, searchUser._id);

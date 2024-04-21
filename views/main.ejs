@@ -89,7 +89,7 @@
     #story-div {
       width: 100vw;
       height: 20vh;
-      background-color: red;
+      /* background-color: red; */
       /* overflow-x: auto;
       white-space:  nowrap;
       position: relative; */
@@ -293,49 +293,53 @@
     </form>
     
    
-    <div id="post-sec">
-      <% posts.reverse().forEach(post => { %>
-        <div id="public">
-        <a href="/friendlist/<%=post.user._id%>"><div id="public-a">
-          <div id="image">
-            <% if (post.user && post.user.profileImage) { %>
-              <img src="/images/uploads/<%=post.user.profileImage%>" alt="">
+    <% posts.reverse().forEach(post => { %>
+      <div id="public">
+        <a href="/friendlist/<%= post.user ? post.user._id : '' %>">
+          <div id="public-a">
+            <div id="image">
+              <% if (post.user && post.user.profileImage) { %>
+                <img src="/images/uploads/<%= post.user.profileImage %>" alt="">
+              <% } else { %>
+                <img src="/images/uploads/<%= user.profileImage %>" alt="Profile Image">
+              <% } %>
+            </div>
+            <% if (post.user && post.user.username) { %>
+              <h1 style="color: #385898;"><%= post.user.username %></h1>
             <% } else { %>
-              <img src="/images/uploads/<%=user.profileImage%>" alt="Profile Image">
+              <h1 style="color: #385898;"><%= user.username %></h1>
             <% } %>
           </div>
-          <% if (post.user && post.user.username) { %>
-            <h1 style="color: #385898;"><%= post.user.username %></h1>
-          <% } else { %>
-            <h1 style="color: #385898;"><%=user.username%></h1>
-          <% } %>
-        </div></a>
-          <div id="icon">
-            <a href="/save/<%=post._id%>"><h1><i class="ri-more-2-fill" style="color: #385898;"></i></h1></a>
-          </div>
+        </a>
+        <div id="icon">
+          <a href="/save/<%= post._id %>"><h1><i class="ri-more-2-fill" style="color: #385898;"></i></h1></a>
         </div>
-        
-        <div id="caption">
-          <div class="caption-container">
-            <p><%= post.caption %></p>
-          </div>
+      </div>
+      
+      <div id="caption">
+        <div class="caption-container">
+          <p><%= post.caption %></p>
         </div>
-        <div id="post">
-          <a href="/openprofile/<%=post._id%>"><div id="post-image">
+      </div>
+      <div id="post">
+        <a href="/openprofile/<%= post._id %>">
+          <div id="post-image">
             <img src="/images/uploads/<%= post.picture %>" alt="">
-          </div></a>
-          <div id="like-sec">
-            <a href="/like/<%= post._id %>" id="likeButton<%= post._id %>">
-                <% if (String(post.likes).includes(String(user._id))) { %>
-                    <i class="ri-thumb-up-fill" style="color: blue;"></i>
-                <% } else { %>
-                    <i class="ri-thumb-up-line" style="color: #385898;"></i>
-                <% } %>
-            </a>
-           <a href="/comment/<%=post._id%>"><h2><i class="ri-chat-3-line"></i></h2></a>
+          </div>
+        </a>
+        <div id="like-sec">
+          <a href="/like/<%= post._id %>" id="likeButton<%= post._id %>">
+            <% if (String(post.likes).includes(String(user._id))) { %>
+              <i class="ri-thumb-up-fill" style="color: blue;"></i>
+            <% } else { %>
+              <i class="ri-thumb-up-line" style="color: #385898;"></i>
+            <% } %>
+          </a>
+          <a href="/comment/<%= post._id %>"><h2><i class="ri-chat-3-line"></i></h2></a>
         </div>        
-        </div>
-      <% }) %>
+      </div>
+    <% }) %>
+    
       
       
     </div>
