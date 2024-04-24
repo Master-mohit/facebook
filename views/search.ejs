@@ -107,7 +107,7 @@
             }
         });
     
-        function appendSearchUser(profileImage, username, id) {
+        function appendSearchUser(profileImage, username, id,) {
             const template = `<div onclick="user('${profileImage}', '${username}', '${id}')" class="user">
                 <div class="picture">
                     <img src="${profileImage}" alt="Profile Image">
@@ -124,6 +124,7 @@
             window.location.href = `/friendlist/${id}`;
         }
     </script>
+    
     
 </body>
 </html>

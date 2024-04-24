@@ -9,7 +9,7 @@ const localStrategy = require("passport-local");
 const upload = require("./multer");
 passport.use(new localStrategy(userModel.authenticate()));
 
-/* GET home page. */
+
 router.get('/', function(req, res, next) {
   res.render('index');
 });
@@ -72,6 +72,9 @@ router.post('/story', isLoggedIn, upload.single('storyFile'), async function(req
 });
 
 
+
+
+
 router.get('/likee/:id', async function(req, res, next) {
   try {
     
@@ -99,6 +102,37 @@ router.get('/likee/:id', async function(req, res, next) {
    
     console.error(error);
     res.status(500).send("Internal Server Error");
+  }
+});
+
+router.get('/commentt/:id', isLoggedIn, async function(req, res, next) {
+  try {
+    const user = await userModel.findOne({ username: req.session.passport.user });
+    const post = await postModel.findById(req.params.id).populate("user");
+    
+    res.render('commentt', { post, user });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('Server Error');
+  }
+});
+
+router.post('/commentt/:id', isLoggedIn, async function(req, res, next) {
+  try {
+    const user = await userModel.findOne({ username: req.session.passport.user });
+    const post = await postModel.findById(req.params.id).populate("user");
+    
+    const newComment = await commentModel.create({
+      text: req.body.text,
+      user: user._id,
+      post: post._id
+    });
+    post.comments.push(newComment._id);
+    await post.save();
+    return res.status(200).json({ msg: 'Comment added successfully', comment: newComment });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('Server Error');
   }
 });
 
@@ -312,6 +346,7 @@ router.post('/comment/:id', isLoggedIn, async function(req, res, next) {
     post.comments.push(newComment._id);
     await post.save();
 
+    // Send success response with the newly created comment
     return res.status(200).json({ msg: 'Comment added successfully', comment: newComment });
   } catch (error) {
     console.error(error);
@@ -433,8 +468,6 @@ router.get('/main', isLoggedIn, async function(req, res, next) {
     return res.status(500).send('Internal Server Error');
   }
 });
-
-
 
 
 router.get('/createp',isLoggedIn,async function(req, res, next) {
