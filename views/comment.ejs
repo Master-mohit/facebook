@@ -156,7 +156,6 @@
     document.getElementById('postComment').addEventListener('click', function() {
       const commentText = document.getElementById('commentInput').value;
       if (commentText.trim() !== '') {
-        // Pass the username and profile image to the appendComment function
         const username = "<%=user.username%>";
         const profileImage = "/images/uploads/<%=user.profileImage%>";
         appendComment(username, commentText, profileImage);

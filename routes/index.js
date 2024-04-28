@@ -9,6 +9,7 @@ const localStrategy = require("passport-local");
 const upload = require("./multer");
 passport.use(new localStrategy(userModel.authenticate()));
 
+router.use('/images/uploads', express.static('path/to/images/uploads'));
 
 router.get('/', function(req, res, next) {
   res.render('index');
@@ -51,6 +52,8 @@ router.post('/bio', isLoggedIn, async function(req, res, next) {
   }
 });
 
+
+
 router.post('/story', isLoggedIn, upload.single('storyFile'), async function(req, res, next) {
   try {
     const user = await userModel.findOne({ username: req.session.passport.user });
@@ -63,21 +66,23 @@ router.post('/story', isLoggedIn, upload.single('storyFile'), async function(req
     user.stories.push(story._id);
     await user.save();
 
+    for (const friendId of user.friends) {
+      const friend = await userModel.findById(friendId);
+      friend.stories.push(story._id);
+      await friend.save();
+    }
+
     res.render('story', { user, file: req.file.filename });
   
   } catch (error) {
     console.error(error);
-   
+    res.redirect("/main");
   }
 });
 
 
-
-
-
-router.get('/likee/:id', async function(req, res, next) {
+router.post('/like/:id', async function(req, res, next) { 
   try {
-    
     if (!req.session.passport || !req.session.passport.user) {
       return res.status(401).send("Unauthorized");
     }
@@ -91,19 +96,18 @@ router.get('/likee/:id', async function(req, res, next) {
     }
     const likedIndex = post.likes.indexOf(user._id);
     if (likedIndex === -1) {
-    
       post.likes.push(user._id);
     } else {
       post.likes.splice(likedIndex, 1);
     }
     await post.save();
-    res.redirect("back");
+    res.json({ success: true, likes: post.likes }); // Send JSON response with updated likes
   } catch (error) {
-   
     console.error(error);
-    res.status(500).send("Internal Server Error");
+    res.status(500).json({ success: false, error: "Internal Server Error" });
   }
 });
+
 
 router.get('/commentt/:id', isLoggedIn, async function(req, res, next) {
   try {
@@ -454,7 +458,7 @@ router.get('/like/:id', async function(req, res, next) {
 
 router.get('/main', isLoggedIn, async function(req, res, next) {
   try {
-    const user = await userModel.findOne({ username: req.session.passport.user });
+    const user = await userModel.findOne({ username: req.session.passport.user }).populate('friends').populate('stories');
     if (!user) {
       return res.status(404).send("User not found");
     }
